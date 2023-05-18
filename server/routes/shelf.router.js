@@ -5,6 +5,10 @@ const {
   rejectUnauthenticated,
 } = require('../modules/authentication-middleware');
 
+const {
+  rejectUnauthenticated,
+} = require('../modules/authentication-middleware');
+
 /**
  * Get all of the items on the shelf
  */
@@ -36,8 +40,29 @@ router.post('/', (req, res) => {
 /**
  * Delete an item if it's something the logged in user added
  */
-router.delete('/:id', (req, res) => {
+router.delete('/:id', rejectUnauthenticated, (req, res) => {
   // endpoint functionality
+  
+  if (req.user != undefined) {
+    idToDelete = req.params.id;
+    userID = req.user.id;
+
+    sqlQuery = `DELETE FROM item WHERE item.id=$1 AND item.user_id=$2;`
+    sqlValues = [idToDelete, userID]
+
+    pool
+    .query(sqlQuery, sqlValues)
+    .then(response => {
+      res.send(200)
+    })
+    .catch(error => {
+      console.log('Error deleting from database', error)
+    })
+  } else {
+    console.log('User Not Logged In');
+  }
+
+
 });
 
 /**

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import useReduxStore from '../../hooks/useReduxStore';
