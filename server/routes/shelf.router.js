@@ -5,9 +5,6 @@ const {
   rejectUnauthenticated,
 } = require('../modules/authentication-middleware');
 
-const {
-  rejectUnauthenticated,
-} = require('../modules/authentication-middleware');
 
 /**
  * Get all of the items on the shelf
@@ -18,10 +15,12 @@ router.get('/', rejectUnauthenticated, (req, res) => {
   console.log('req.user.id:', req.user.id);
 
   //select from shelf, where user_id is req.user.id
-  sqlText = `SELECT * FROM "item" WHERE "user_id" = $1`;
+  // sqlText = `SELECT * FROM "item" WHERE "user_id" = $1`;
+  sqlText = `SELECT * FROM "item"`;
+
   sqlValue = [req.user.id];
   pool
-    .query(sqlText, sqlValue)
+    .query(sqlText)
     .then((results) => res.send(results.rows))
     .catch((error) => {
       console.log('Error making SELECT for shelf items:', error);

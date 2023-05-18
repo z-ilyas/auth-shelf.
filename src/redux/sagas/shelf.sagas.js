@@ -21,8 +21,9 @@ function* createShelf(action) {
 }
 function* deleteShelfItem(action) {
     try {
+        console.log(action.payload)
         yield axios.delete(`/api/shelf/${action.payload}`);
-        yield put({type: 'SET_SHELF'})
+        yield put({type: 'SAGA_FETCH_SHELF'})
     } catch (error) {
         console.log('Delete request to /api/shelf/:id failed', error)
     }
@@ -36,5 +37,5 @@ function* ShelfSaga() {
     yield takeLatest('SAGA_DELETE_ITEM', deleteShelfItem);
 
   }
-}
+
 export default ShelfSaga;
