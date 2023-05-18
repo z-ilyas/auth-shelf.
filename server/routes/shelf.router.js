@@ -14,7 +14,23 @@ router.get('/', (req, res) => {
  */
 router.post('/', (req, res) => {
   // endpoint functionality
+  console.log(req.body);
+  const description = req.body.description
+  const image = req.body.image
+  const userID = req.user.id
+
+  const createShelf = `
+  INSERT INTO "item" ("description", "image_url", "user_id")
+  VALUES ($1, $2, $3);`;
+  pool.query(createShelf, [description, image, userID])
+  .then(result => {
+    res.sendStatus(201);
+  }).catch(err => {
+    console.log(err);
+    res.sendStatus(500)
+  })
 });
+
 
 /**
  * Delete an item if it's something the logged in user added

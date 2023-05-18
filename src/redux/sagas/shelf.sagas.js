@@ -10,9 +10,10 @@ function* fetchShelf() {
         console.log('Shelf get request failed', error);
     }
 }
-function* createShelf() {
+function* createShelf(action) {
     try{
         yield axios.post('/api/shelf', action.payload);
+        console.log(action.payload);
         yield put({ type: 'SAGA_FETCH_SHELF' });
     } catch (error) {
         console.log('Shelf POST request failed', error);
