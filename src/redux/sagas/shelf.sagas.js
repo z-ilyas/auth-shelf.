@@ -2,7 +2,7 @@ import axios from 'axios';
 import { put, takeLatest } from 'redux-saga/effects';
 
 function* fetchShelf() {
-    try{
+    try {
         const response = yield axios.get('/api/shelf');
         console.log('should show self', response.data);
         yield put({ type: 'SET_SHELF', payload: response.data });
@@ -12,6 +12,6 @@ function* fetchShelf() {
 }
 function* ShelfSaga() {
     yield takeLatest('SAGA_FETCH_SHELF', fetchShelf);
-  }
-  
+}
+
 export default ShelfSaga;
