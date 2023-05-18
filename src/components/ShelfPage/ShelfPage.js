@@ -1,6 +1,6 @@
-import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
+import useReduxStore from '../../hooks/useReduxStore';
 
 
 function ShelfPage() {
@@ -9,10 +9,13 @@ function ShelfPage() {
   const [image, setImage] = useState('');
 
   const dispatch = useDispatch();
+  const store = useReduxStore();
+
+  //console.log('store>>>>', store)
 
   useEffect(() => {
-    dispatch({ type: 'SAGA_FETCH_SHELF'});
-}, []);
+    dispatch({ type: 'SAGA_FETCH_SHELF' });
+  }, []);
 
   const createShelf = () => {
     dispatch ({ 
@@ -43,6 +46,22 @@ function ShelfPage() {
         onChange={(event) => setImage(event.target.value)}    
         />
       <button onClick={createShelf}>Create Shelf</button>
+      <table className="simpleTable">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Image</th>
+          </tr>
+        </thead>
+        <tbody>
+          {store.shelf.map((item, index) => (
+            <tr key={item.id}>
+              <td>{item.description}</td>
+              <td><img src={item.image_url}></img></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

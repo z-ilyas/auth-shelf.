@@ -1,12 +1,33 @@
 const express = require('express');
 const pool = require('../modules/pool');
 const router = express.Router();
+const {
+  rejectUnauthenticated,
+} = require('../modules/authentication-middleware');
+
+const {
+  rejectUnauthenticated,
+} = require('../modules/authentication-middleware');
 
 /**
  * Get all of the items on the shelf
  */
-router.get('/', (req, res) => {
-  res.sendStatus(200); // For testing only, can be removed
+router.get('/', rejectUnauthenticated, (req, res) => {
+
+  //user id?
+  console.log('req.user.id:', req.user.id);
+
+  //select from shelf, where user_id is req.user.id
+  sqlText = `SELECT * FROM "item" WHERE "user_id" = $1`;
+  sqlValue = [req.user.id];
+  pool
+    .query(sqlText, sqlValue)
+    .then((results) => res.send(results.rows))
+    .catch((error) => {
+      console.log('Error making SELECT for shelf items:', error);
+      res.sendStatus(500);
+    })
+  //res.sendStatus(200); // For testing only, can be removed
 });
 
 /**
@@ -35,8 +56,29 @@ router.post('/', (req, res) => {
 /**
  * Delete an item if it's something the logged in user added
  */
-router.delete('/:id', (req, res) => {
+router.delete('/:id', rejectUnauthenticated, (req, res) => {
   // endpoint functionality
+  
+  if (req.user != undefined) {
+    idToDelete = req.params.id;
+    userID = req.user.id;
+
+    sqlQuery = `DELETE FROM item WHERE item.id=$1 AND item.user_id=$2;`
+    sqlValues = [idToDelete, userID]
+
+    pool
+    .query(sqlQuery, sqlValues)
+    .then(response => {
+      res.send(200)
+    })
+    .catch(error => {
+      console.log('Error deleting from database', error)
+    })
+  } else {
+    console.log('User Not Logged In');
+  }
+
+
 });
 
 /**
