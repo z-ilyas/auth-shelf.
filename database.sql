@@ -15,3 +15,6 @@ CREATE TABLE "item" (
     "image_url" VARCHAR (2083),
     "user_id" INT REFERENCES "user"
 );
+
+INSERT INTO "item" ("description", "image_url", "user_id")
+VALUES ('Banana', 'https://th-thumbnailer.cdn-si-edu.com/4Nq8HbTKgX6djk07DqHqRsRuFq0=/1000x750/filters:no_upsc[…]43019-e0fc-4b3c-8cdb-48e22f38bff2/istock-183380744.jpg', 1);
